@@ -16,7 +16,7 @@
     </div>
 
     <div class="button">
-      <van-button plain block type="warning" @click="save"> 修改 </van-button>
+      <van-button  block type="primary" @click="save"> 修改 </van-button>
     </div>
   </div>
 </template>
