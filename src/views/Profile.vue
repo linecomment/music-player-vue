@@ -110,7 +110,8 @@
       >
     </div>
   </div>
-  <van-popup v-model:show="showPop">
+  <van-popup v-model:show="showPop" closeable
+  close-icon="clear" close-icon-position="top-right">
     <div v-if="activeIndex === 0">
       <form-pop :formData="formData" :activeIndex="activeIndex"></form-pop>
     </div>

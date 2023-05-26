@@ -2,66 +2,63 @@
   <div class="line-pop">
     <div class="form">
       <van-field
-        :name="dataLabel.label1"
-        :label="dataLabel.label1"
-        :placeholder="dataLabel.label1"
+      label-align="center"
+      label-width="10px"
+        :class="icon"
+        :placeholder="param"
         readonly
       />
       <van-field
         v-model="updateValue"
-        :name="dataLabel.label2"
-        :label="dataLabel.label2"
+        :class="icon"
         placeholder="请填写"
       />
     </div>
 
     <div class="button">
-      <van-button plain type="success" @click="cancle">取消</van-button>
-      <van-button plain type="warning" @click="save"> 修改 </van-button>
+      <van-button plain block type="warning" @click="save"> 修改 </van-button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps, reactive, onMounted } from "vue";
+import { ref, defineProps, reactive, onMounted,computed } from "vue";
 // const formData = reactive({
 //     formData
 // })
-const dataLabel = reactive({
-  label1: null,
-  label2: null,
-});
+const dataValue = ref(null)
 const updateValue = ref(null);
 const props = defineProps({
   formData: Object,
   activeIndex: String,
 });
+const icon = ref(null)
 onMounted(() => {
   const i = props.activeIndex;
+  console.log(props.formData,'==================')
   if (i === 0) {
     // 头像
-    dataLabel.label1 = "原头像";
-    dataLabel.label2 = "新头像";
+    dataValue.value = 'avatar'
   } else if (i === 1) {
     // 昵称
-    dataLabel.label1 = "原昵称";
-    dataLabel.label2 = "新昵称";
+    dataValue.value = 'nickname'
+    icon.value = 'iconfont icon-ziyuan26'
   } else if (i === 2) {
     // 密码
-    dataLabel.label1 = "原密码";
-    dataLabel.label2 = "新密码";
+    dataValue.value = 'password'
+    icon.value = 'iconfont icon-mima'
   } else if (i === 3) {
     // 手机号
-    dataLabel.label1 = "原手机号";
-    dataLabel.label2 = "新手机号";
+    dataValue.value = 'phone'
+    icon.value = 'iconfont icon-shoujihao'
   } else if (i === 4) {
     // 生日
-    dataLabel.label1 = "原生日";
-    dataLabel.label2 = "新生日";
+    dataValue.value = 'birthday'
+    icon.value = 'iconfont icon-chushengriqi'
   } else {
     // 邮箱
-    dataLabel.label1 = "原邮箱";
-    dataLabel.label2 = "新邮箱";
+    dataValue.value = 'email'
+    icon.value = 'iconfont icon-youxiang'
   }
 });
 
@@ -82,6 +79,10 @@ const save = () => {
   }
   // 发送post请求
 };
+
+const param = computed(()=>{
+    return eval(`props.formData.${dataValue.value}`)
+})
 </script>
 
 <style lang="less" scoped>
@@ -89,13 +90,15 @@ const save = () => {
   height: 100%;
   .form {
     margin-top: 1rem;
-    color: red !important;
   }
   .button {
+    text-align: center;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    justify-content: space-around;
-    display: flex;
+    align-items: center;
   }
+}
+.van-field-input-text-color{
+    color:red !important;
 }
 </style>
