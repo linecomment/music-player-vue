@@ -16,18 +16,20 @@
           <div class="tips">左/右滑动可以切换上/下首歌</div>
         </div>
       </van-col>
+      <!-- 播放/暂停图标 -->
       <van-col offset="4" span="3">
         <div
-          @click="playMusic"
+          @click.stop="playMusic"
           :class="playIcon"
-          style="font-size: 2.2rem"
+          style="font-size: 2.2rem;color:rgb(224, 96, 96)"
         ></div>
       </van-col>
+      <!-- 歌单图标 -->
       <van-col span="3">
         <div
           @click="songList"
           class="iconfont icon-24gl-playlistMusic4"
-          style="font-size: 2.2rem"
+          style="font-size: 2.2rem;color:rgb(224, 96, 96)"
         ></div>
       </van-col>
     </van-row>
@@ -57,7 +59,6 @@ const playMusic = () => {
     playIcon.value = "iconfont icon-24gl-playCircle";
     audio.value.pause();
   }
-  console.log("playMusic");
 };
 const songList = () => {};
 
@@ -89,6 +90,7 @@ const goToMusic = ()=>{
 
 <style lang="less" scope>
 .line-player {
+  background-color: rgb(48, 47, 47);
   img {
     height: 2.6rem;
     width: 2.6rem;
@@ -96,11 +98,12 @@ const goToMusic = ()=>{
   }
   .content {
     .title {
+      color:rgb(224, 96, 96);
       font-size: 1.2rem;
       margin-top: 0;
     }
     .tips {
-      color: grey;
+      color: rgb(255, 254, 254);
       padding-bottom: 0;
       margin-bottom: 0.1rem;
     }

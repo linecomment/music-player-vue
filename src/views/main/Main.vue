@@ -1,32 +1,5 @@
 ﻿<template>
   <router-view></router-view>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-  <p>sdsd</p>
-
 </template>
 
 <script setup>

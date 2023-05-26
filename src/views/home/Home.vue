@@ -4,7 +4,6 @@
       <Header></Header>
     </van-sticky>
     <Main></Main>
-      <music-player></music-player>
     <van-sticky :offset-bottom="50" position="bottom">
       <Footer></Footer>
     </van-sticky>
@@ -14,7 +13,6 @@
 import Header from "@/views/header/Header.vue";
 import Main from "@/views/main/Main.vue";
 import Footer from "@/views/footer/Footer.vue";
-import MusicPlayer from "@/components/MusicPlayer.vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 </script>

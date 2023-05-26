@@ -4,7 +4,7 @@
   <div class="container">
     <div class="music-info">
       <van-image
-      round
+        round
         class="ablum-image"
         :src="songList[currentIndex].coverUrl"
         :class="{ 'album-cover': !audio.paused, paused: audio.paused }"
@@ -17,7 +17,7 @@
             {{ songList[currentIndex].musicName }}
           </div></van-col
         >
-        <!-- style="font-size:2rem; backgound-color:black;font-weight:bold;" -->
+        <!-- 喜欢图标 -->
         <van-col class="like">
           <div
             @click="toggleLike"
@@ -30,10 +30,10 @@
           ></div
         ></van-col>
       </van-row>
-
-      <!-- <div class="artist-name">{{ songList[currentIndex].author }}</div> -->
     </div>
+    <!-- 底部播放 -->
     <div class="player">
+      <!-- 进度条 -->
       <div class="slider">
         <div class="time-info">
           {{ state.currentTime }}
@@ -197,18 +197,21 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   height: 100%;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 
   .music-info {
     width: 100%;
     height: 100%;
     text-align: center;
-    margin-top: 1rem;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.064);
+    background-color: rgb(252, 117, 117);
+
     .ablum-image {
       width: 20rem;
-      height: 20rem; /* 请根据实际情况调整宽高 */
-      object-fit: cover; /* 可选，根据需要进行使用或省略 */
+      height: 20rem;
+      object-fit: cover;
       border-radius: 50%;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
     }
     .album-cover {
       animation: rotate 5s linear infinite;
