@@ -3,11 +3,35 @@
   <!-- <p>{{ route.params.id }}</p> -->
   <div class="container">
     <div class="music-info">
-      <van-image :src="songList[currentIndex].coverUrl"></van-image>
+      <van-image
+      round
+        class="ablum-image"
+        :src="songList[currentIndex].coverUrl"
+        :class="{ 'album-cover': !audio.paused, paused: audio.paused }"
+      ></van-image>
     </div>
     <div class="singer-info">
-      <div class="song-name">{{ songList[currentIndex].musicName }}</div>
-      <div class="artist-name">{{ songList[currentIndex].author }}</div>
+      <van-row justify="space-between">
+        <van-col offset="2">
+          <div class="song-name">
+            {{ songList[currentIndex].musicName }}
+          </div></van-col
+        >
+        <!-- style="font-size:2rem; backgound-color:black;font-weight:bold;" -->
+        <van-col class="like">
+          <div
+            @click="toggleLike"
+            :style="{
+              fontSize: '2rem',
+              color: likeStyleColor,
+              fontWeight: '500',
+            }"
+            class="iconfont icon-xihuan"
+          ></div
+        ></van-col>
+      </van-row>
+
+      <!-- <div class="artist-name">{{ songList[currentIndex].author }}</div> -->
     </div>
     <div class="player">
       <div class="slider">
@@ -42,8 +66,7 @@
             @click="togglePlay"
             :class="playIcon"
             style="font-size: 2.2rem"
-          >
-        </div>
+          ></div>
         </van-col>
         <van-col>
           <div
@@ -69,6 +92,7 @@ import Header from "@/views/header/Header.vue";
 const route = useRoute();
 const playIcon = ref("iconfont icon-24gl-playCircle");
 const currentIndex = ref(0);
+const likeStyleColor = ref("black");
 
 // 歌曲列表
 const songList = [
@@ -105,6 +129,15 @@ audio.addEventListener("timeupdate", () => {
   state.currentTime = formatTime(audio.currentTime);
 });
 
+const toggleLike = () => {
+  if (likeStyleColor.value === "black") {
+    likeStyleColor.value = "red";
+    //todo 添加收藏/喜欢
+  } else {
+    likeStyleColor.value = "black";
+    //todo 移除收藏/喜欢
+  }
+};
 const togglePlay = () => {
   if (audio.paused) {
     playIcon.value = "iconfont icon-24gl-pauseCircle";
@@ -164,43 +197,81 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   height: 100%;
-}
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 
-.music-info {
-  width: 100%;
-  height: 100%;
-}
+  .music-info {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    margin-top: 1rem;
+    .ablum-image {
+      width: 20rem;
+      height: 20rem; /* 请根据实际情况调整宽高 */
+      object-fit: cover; /* 可选，根据需要进行使用或省略 */
+      border-radius: 50%;
+    }
+    .album-cover {
+      animation: rotate 5s linear infinite;
+    }
 
-.singer-info {
-  text-align: left !important;
-  margin-top: 1rem;
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes rotate-paused {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(calc(360deg * (var(--pause-rotation) / 100)));
+      }
+    }
+    .album-cover {
+      --pause-rotation: 0;
+      animation: rotate var(--rotate-duration, 5s) linear infinite;
+      animation-play-state: var(--rotate-play-state, running);
+    }
 
-  .song-name {
-    font-size: 20px;
-    font-weight: bold;
+    .album-cover.paused {
+      animation-play-state: paused;
+      animation-name: rotate-paused;
+      --pause-rotation: var(--current-rotation);
+    }
   }
 
-  .artist-name {
-    font-size: 16px;
-    color: grey;
+  .singer-info {
+    width: 100%;
+    margin-top: 2rem;
+    margin-right: 1rem;
+    .song-name {
+      font-family: cursive;
+      font-size: 2rem;
+      align-items: end;
+    }
+    .van-row {
+      align-items: center;
+    }
   }
-}
-
-.player {
-  position: fixed;
-  bottom: 0;
-  height: 10%;
-  width: 100%;
-  background-color: #fff;
-  padding: 3rem;
-  .slider {
-    display: flex;
-    margin-bottom: 1rem;
-    align-items: center;
-    .time-info {
-      font-size: small;
-      color: #0f0e0e7c;
-      padding: 0.5rem;
+  .player {
+    position: fixed;
+    bottom: 0;
+    height: 10%;
+    width: 100%;
+    background-color: #fff;
+    padding: 3rem;
+    .slider {
+      display: flex;
+      margin-bottom: 1rem;
+      align-items: center;
+      .time-info {
+        font-size: small;
+        color: #0f0e0e7c;
+        padding: 0.5rem;
+      }
     }
   }
 }
