@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="title">最多人听</div>
-  <div class="card-list">
+  <div class="rank-card-list">
     <song-card></song-card>
     
     <song-card></song-card>
@@ -35,8 +35,11 @@ import SongCard from "@/components/SongCard.vue";
     padding-left: 1rem;
     font-size: 1.5rem;
   }
-  .card-list {
+  .rank-card-list {
     align-items: center;
+    .song-card{
+      height: 2.5rem;
+    }
   }
   
 </style>

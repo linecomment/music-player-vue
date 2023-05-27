@@ -1,6 +1,6 @@
 ﻿<template>
   <div
-    class="line-player"
+    class="mp-music-player"
     @touchstart="touchStart"
     @touchmove="touchMove"
     @touchend="touchEnd"
@@ -89,7 +89,7 @@ const goToMusic = ()=>{
 </script>
 
 <style lang="less" scope>
-.line-player {
+.mp-music-player{
   background-color: rgb(48, 47, 47);
   img {
     height: 2.6rem;

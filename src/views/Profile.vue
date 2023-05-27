@@ -148,7 +148,7 @@
 <script setup>
 import FormPop from "@/components/FormPop.vue";
 import { ref, reactive } from "vue";
-const showPop = ref(true);
+const showPop = ref(false);
 const fieldname = ref(null);
 const activeIndex = ref(0);
 
