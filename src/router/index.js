@@ -24,9 +24,14 @@ const routes = [
                 component: () => import('@/views/SongList.vue')
             },
             {
-                path: '/profile',
+                path: 'profile',
                 name: 'profile',
                 component: () => import('@/views/Profile.vue')
+            },
+            {
+                path:'genre/:id',
+                name:'genre',
+                component:()=>import('@/views/main/Genre.vue')
             },
         ]
     },

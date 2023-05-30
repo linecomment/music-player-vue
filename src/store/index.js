@@ -8,21 +8,44 @@ const store = createStore({
         audio: new Audio(),
         songList: [
             {
-                musicId: "122",
-                musicName: "忘情水",
+                id: "1",
+                musicName: "忘情水1",
                 coverUrl: "/music/cover/ldh_忘情水.jpg",
-                author: "刘德华",
+                author: "刘德华1",
                 audioUrl: "/music/李翔宇-起风了.mp3",
+                like:false,
             },
             {
-                musicId: "122",
-                musicName: "忘情水",
+                id: "2",
+                musicName: "忘情水2",
                 coverUrl: "/music/cover/ldh_忘情水.jpg",
                 author: "刘德华2",
                 audioUrl: "/music/李翔宇-起风了.mp3",
+                like:true,
+
             },
         ],
-     
+        favoriteList: [
+            {
+                id: "1",
+                musicName: "忘情水1",
+                coverUrl: "/music/cover/ldh_忘情水.jpg",
+                author: "刘德华1",
+                audioUrl: "/music/李翔宇-起风了.mp3",
+                like:true,
+
+            },
+            {
+                id: "2",
+                musicName: "忘情水2",
+                coverUrl: "/music/cover/ldh_忘情水.jpg",
+                author: "刘德华2",
+                audioUrl: "/music/李翔宇-起风了.mp3",
+                like:false,
+
+            }
+        ]
+
     },
     mutations: {
         SET_TOKEN(state, token) {
@@ -31,6 +54,12 @@ const store = createStore({
         SET_AUDIO(state, audio) {
             state.audio = audio;
         },
+        SET_SONG_LIST(state, songList) {
+            state.songList = songList
+        },
+        SET_FAVORITE_LIST(state, favoriteList) {
+            state.favoriteList = favoriteList
+        }
     },
     actions: {
         async login({ commit }, loginParam) {
@@ -59,6 +88,12 @@ const store = createStore({
         setAudio({ commit }, audio) {
             commit('SET_AUDIO', audio);
         },
+        setSongList({ commit }, songList) {
+            commit('SET_SONG_LIST', songList)
+        },
+        setFavoriteList({ commit }, favoriteList) {
+            commit('SET_FAVORITE_LIST', favoriteList)
+        }
     }
 })
 

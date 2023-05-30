@@ -1,6 +1,6 @@
 ﻿<template>
   <Header></Header>
-  <!-- <p>{{ route.params.id }}</p> -->
+  <p>{{ route.params.id }}</p>
   <div class="container">
     <div class="music-info">
       <van-image
@@ -81,14 +81,15 @@
 </template>
   
 <script setup>
-import { ref, reactive, onUnmounted } from "vue";
+import { ref, reactive, onUnmounted,computed,watch } from "vue";
 import { useRoute } from "vue-router";
+import {useStore} from 'vuex'
 import Header from "@/views/header/Header.vue";
 const route = useRoute();
 const playIcon = ref("iconfont icon-24gl-playCircle");
 const currentIndex = ref(0);
 const likeStyleColor = ref("black");
-
+const store = useStore()
 // 歌曲列表
 const songList = [
   {
@@ -106,7 +107,11 @@ const songList = [
     audioUrl: "/music/李翔宇-起风了.mp3",
   },
 ];
-let audio = new Audio();
+const audioRef = computed(()=>{
+  return store.state.audio
+})
+const audio = audioRef.value
+// let audio = new Audio();
 audio.src = songList[0].audioUrl;
 
 const state = reactive({
@@ -176,13 +181,14 @@ const seekTo = () => {
   audio.currentTime = (state.progress / 100) * audio.duration;
 };
 
-setInterval(() => {
+let timer = setInterval(() => {
   state.currentTime = formatTime(audio.currentTime);
+  store.dispatch('setAudio',audio)
 }, 1000);
 
 onUnmounted(() => {
   // 清除定时器
-  clearInterval();
+  clearInterval(timer);
 });
 </script>
   

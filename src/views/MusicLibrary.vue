@@ -1,15 +1,26 @@
 ﻿<template>
   <Swpie></Swpie>
   <div class="title">为你推荐</div>
-  <div class="parent" v-for="(item, i) in genreList">
-    <song-genre :genreType=item.id></song-genre>
+  <div class="parent">
+    <template v-for="(item, i) in genreList">
+      <template v-if="i % 2 === 0">
+        <div class="row">
+          <song-genre :genreType="genreList[i].id"></song-genre>
+          <template v-if="(i + 1) < genreList.length">
+            <song-genre :genreType="genreList[i + 1].id"></song-genre>
+          </template>
+        </div>
+      </template>
+    </template>
   </div>
 </template>
 
 <script setup>
+import { ref, reactive,defineProps,onMounted } from "vue";
+import { useStore } from 'vuex'
 import Swpie from "@/components/Swipe.vue";
 import SongGenre from "@/components/SongGenre.vue";
-import { ref, reactive,defineProps } from "vue";
+const store = useStore()
 const props = defineProps({
   genreType:{
     type:String,
@@ -17,13 +28,19 @@ const props = defineProps({
   },
 });
 
+let songList = []
+onMounted(()=>{
+  //todo 获取歌曲信息
+  songList = store.state.songList
+})
+
 const type = ref(0);
 // 流派列表
 const genreList = [
   { id: 0, genre: "流行" },
   { id: 1, genre: "说唱" },
   { id: 2, genre: "国风" },
-  { id: 4, genre: "爵士" },
+  { id: 3, genre: "爵士" },
 ];
 </script>
 
@@ -40,7 +57,15 @@ const genreList = [
   flex-wrap: wrap;
 }
 
+.row {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding:0.5rem;
+}
 .song-genre {
-  width: 50%;
+  width: calc(50% - 8px);
 }
 </style>

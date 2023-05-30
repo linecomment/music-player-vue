@@ -1,29 +1,31 @@
 ﻿<template>
   <div class="image-grid" >
-    <van-image  src="/music/cover/ldh_忘情水.jpg" width="100%" height="100%" @click="goToSong"></van-image>
+    <van-image  src="/music/cover/ldh_忘情水.jpg" width="100%" height="100%" @click="goToGenre"></van-image>
+    <div>ss</div>
   </div>
 </template>
 
 <script setup>
 import { computed,onMounted } from "vue";
 import {useRouter} from 'vue-router'
-
+import { useStore } from 'vuex'
+ const store = useStore()
+ onMounted(()=>{
+  // 获取类别
+ })
 const props = defineProps({
   genreType:{
     Type:String,
     require:true
-  }
+  },
 })
-onMounted(()=>{
-  console.log(props.genreType)
-})
-const id = 1;
+
 const router = useRouter()
 const musicUrl = computed(() => {
-  return `/music/${id}`;
+  return `/genre/${props.genreType}`;
 });
 
-const goToSong = ()=>{
+const goToGenre = ()=>{
   router.push(musicUrl.value)
 }
 </script>

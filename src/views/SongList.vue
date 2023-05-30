@@ -1,8 +1,8 @@
 ﻿<template>
     <h3>歌单</h3>
-  </template>
+</template>
   
-  <script setup>
+<script setup>
   
   </script>
   
