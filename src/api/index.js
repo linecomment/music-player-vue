@@ -1,18 +1,31 @@
 ﻿import axios from 'axios'
+import { getToken,setToken,removeToken } from '@/api/token';
+import store from '@/store';
 
-const $https = axios.create({
+const api = axios.create({
     baseURL: '/api',
-    timeout: 10 * 1000
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    timeout: 5 * 1000
 })
 
-$https.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => {
+    let token;
+    if(store.state.token){
+        token = getToken()
+    }
+    if (token && config.url !== '/user/login' && config.url !== '/user/register' && config.url!=='/mail/sendEmail') {
+        config.headers['Authorization'] = `Bearer ${token}`
+    }
     return config
 })
 
-$https.interceptors.response.use((res) => {
+api.interceptors.response.use((res) => {
+    console.log('interceptors res : ',res)
     return res.data
 }, (error) => {
-    return Promise.reject(new error('failed'))
+    return Promise.reject(error)
 })
 
-export default $https
+export default api

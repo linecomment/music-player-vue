@@ -75,11 +75,6 @@
             style="font-size: 2.2rem"
           ></div>
         </van-col>
-        <!-- <van-col span="8">
-          <div class="time-info" style="font-size:small; color:rgba(21, 22, 22, 0.466)">
-            {{ state.currentTime }} / {{ state.duration }}
-          </div>
-        </van-col> -->
       </van-row>
     </div>
   </div>

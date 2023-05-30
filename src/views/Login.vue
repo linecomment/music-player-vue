@@ -5,7 +5,7 @@
       <img src="../assets/title_logo.jpg" />
     </div>
     <!-- 登入 -->
-    <van-form @submit="onSubmit" class="l-form" v-show="isRegister">
+    <van-form  class="l-form" v-show="isRegister">
       <van-cell-group inset>
         <van-field
           v-model="formData.account"
@@ -28,13 +28,13 @@
         <p v-show="isRegister" @click="registerOrLogin">没有账号？点我注册</p>
       </div>
       <div style="margin: 16px">
-        <van-button round block type="primary" native-type="submit">
-          提交
+        <van-button round block type="primary" @click="submit">
+          登入
         </van-button>
       </div>
     </van-form>
     <!-- 注册 -->
-    <van-form @submit="onSubmit" class="l-form" v-show="!isRegister">
+    <van-form  class="l-form" v-show="!isRegister">
       <van-cell-group inset>
         <van-field
           v-model="formData.account"
@@ -54,7 +54,9 @@
           placeholder="请输入验证码"
         >
           <template #button>
-            <van-button @click="sendAuthCode" class="l-msg-btn" size="mini">发送验证码</van-button>
+            <van-button @click="sendAuthCode" class="l-msg-btn" size="mini"
+              >发送验证码</van-button
+            >
           </template>
         </van-field>
         <van-field
@@ -80,8 +82,8 @@
         <p v-show="!isRegister" @click="registerOrLogin">已有账号？点我登入</p>
       </div>
       <div style="margin: 16px">
-        <van-button round block type="primary" native-type="submit">
-          提交
+        <van-button round block type="primary" @click="submit">
+          注册
         </van-button>
       </div>
     </van-form>
@@ -90,12 +92,15 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { sendEmailCode } from '@/api/user'
 const isRegister = ref(true);
-const router = useRouter()
+const router = useRouter();
+const store = useStore();
 const formData = reactive({
-  account: "",
-  password: "",
+  account: "2687669185@qq.com",
+  password: "1234567",
   confirmPassword: "",
   authCode: "",
 });
@@ -106,7 +111,7 @@ const clearForm = () => {
   formData.confirmPassword = "";
   formData.authCode = "";
 };
-const phoneReg = /^1\d{10}$/; // 匹配手机号
+const phoneReg = /^1[3-9]\\d{9}$/; // 匹配手机号
 const emailReg = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/; // 匹配电子邮件地址
 // 表单校验
 const accountRules = [
@@ -146,10 +151,18 @@ const confirmPasswordRules = [
   },
 ];
 // 发送验证码
-const sendAuthCode = ()=>{
-
-}
-// 注册/登入 跳转
+const sendAuthCode = () => {
+  sendEmailCode(formData.account).then((res)=>{
+    if(res.code === 20000){
+      console.log('发送成功')
+    }else {
+      console.log('发送失败')
+    }
+  }).catch((error)=>{
+    console.log(error)
+  })
+};
+// 注册/登入 页面转换
 const registerOrLogin = () => {
   clearForm();
   if (isRegister.value) {
@@ -159,15 +172,16 @@ const registerOrLogin = () => {
   }
 };
 // 表单提交
-const onSubmit = (values) => {
+const submit = (values) => {
   if (isRegister.value) {
     // 登入
+    store.dispatch('login', formData);
     console.log("登入");
-    router.push('/')
+    // router.push("/");
   } else {
     // 注册
+    store.dispatch('register',formData)
     console.log("注册");
-    router.push('')
   }
 };
 </script>

@@ -1,12 +1,22 @@
 ﻿<template>
-  <div class="image-grid">
-    <van-image src="/music/cover/ldh_忘情水.jpg" width="100%" height="100%" @click="goToSong"></van-image>
+  <div class="image-grid" >
+    <van-image  src="/music/cover/ldh_忘情水.jpg" width="100%" height="100%" @click="goToSong"></van-image>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed,onMounted } from "vue";
 import {useRouter} from 'vue-router'
+
+const props = defineProps({
+  genreType:{
+    Type:String,
+    require:true
+  }
+})
+onMounted(()=>{
+  console.log(props.genreType)
+})
 const id = 1;
 const router = useRouter()
 const musicUrl = computed(() => {

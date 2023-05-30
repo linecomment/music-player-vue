@@ -13,12 +13,12 @@ export default defineConfig({
   server: {
     port: 1024,
     hmr: true,
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://localhost:8888',
-    //     changeOrigin: true,
-    //     rewrite:(path) => path.replace(/^\/api/, '')
-    //   }
-    // }
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8888',
+        changeOrigin: true,
+        rewrite:(path) => path.replace(/^\/api/, '')
+      }
+    }
   },
 })
