@@ -176,8 +176,7 @@ const submit = (values) => {
   if (isRegister.value) {
     // 登入
     store.dispatch('login', formData);
-    console.log("登入");
-    // router.push("/");
+    router.push("/");
   } else {
     // 注册
     store.dispatch('register',formData)

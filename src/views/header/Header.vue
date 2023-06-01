@@ -11,7 +11,7 @@
           width="2rem"
           height="2rem"
           round
-          src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+          :src=avatar
         />
       </template>
     </van-nav-bar>
@@ -19,7 +19,17 @@
 </template>
 
 <script setup>
+import { useStore} from 'vuex'
+import {computed,onMounted} from 'vue'
 import { useRouter } from 'vue-router';
+const store = useStore()
+const avatar = computed(()=>{
+  return store.state.userInfo.avatarUrl
+})
+onMounted(()=>{
+  console.log(store.state.userInfo.avatarUrl)
+
+})
 const router = useRouter()
 const onClickLeft = () => history.back();
 const onClickRight = () => {
@@ -32,6 +42,10 @@ const onClickRight = () => {
   background-color: red;
   van-nav-bar{
   background-color: red;
+  }
+  img{
+    width: 2rem;
+    height: 2rem;
   }
 }
 </style>

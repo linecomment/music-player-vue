@@ -6,7 +6,7 @@
       <template v-if="i % 2 === 0">
         <div class="row">
           <song-genre :genreType="genreList[i].id"></song-genre>
-          <template v-if="(i + 1) < genreList.length">
+          <template v-if="i + 1 < genreList.length">
             <song-genre :genreType="genreList[i + 1].id"></song-genre>
           </template>
         </div>
@@ -16,32 +16,43 @@
 </template>
 
 <script setup>
-import { ref, reactive,defineProps,onMounted } from "vue";
-import { useStore } from 'vuex'
+import { ref, reactive, defineProps, onMounted, computed } from "vue";
+import { useStore } from "vuex";
 import Swpie from "@/components/Swipe.vue";
 import SongGenre from "@/components/SongGenre.vue";
-const store = useStore()
+import { getGenreList } from "@/api/song";
+const store = useStore();
 const props = defineProps({
-  genreType:{
-    type:String,
-    required:true
+  genreType: {
+    type: String,
+    required: true,
   },
 });
-
-let songList = []
-onMounted(()=>{
-  //todo 获取歌曲信息
-  songList = store.state.songList
-})
-
-const type = ref(0);
+const pageParam = {
+  currentIndex: 0,
+  limit: 10,
+  // todo
+  userId: 1662998854292762624n,
+};
 // 流派列表
-const genreList = [
-  { id: 0, genre: "流行" },
-  { id: 1, genre: "说唱" },
-  { id: 2, genre: "国风" },
-  { id: 3, genre: "爵士" },
-];
+const genreList = [];
+const getGenreList = () => {
+  getGenreList()
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((error) => {
+      console.log("获取流派失败");
+    });
+};
+onMounted(() => {
+  // 获取歌曲信息
+  store.dispatch("getSongList", pageParam);
+  getGenreList();
+});
+const songList = computed(() => {
+  return (songList = store.state.songList);
+});
 </script>
 
 <style lang="less" scoped>
@@ -63,7 +74,7 @@ const genreList = [
   display: flex;
   justify-content: space-between;
   margin-bottom: 1rem;
-  padding:0.5rem;
+  padding: 0.5rem;
 }
 .song-genre {
   width: calc(50% - 8px);

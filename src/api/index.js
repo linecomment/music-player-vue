@@ -15,9 +15,9 @@ api.interceptors.request.use((config) => {
     if(store.state.token){
         token = getToken()
     }
-    if (token && config.url !== '/user/login' && config.url !== '/user/register' && config.url!=='/mail/sendEmail') {
-        config.headers['Authorization'] = `Bearer ${token}`
-    }
+    // if (token && config.url !== '/user/login' && config.url !== '/user/register' && config.url!=='/mail/sendEmail') {
+    //     config.headers['Authorization'] = `Bearer ${token}`
+    // }
     return config
 })
 
