@@ -193,10 +193,21 @@ const edit = (i) => {
   height: 100%;
   width: 100%;
 
+  
+
   .van-popup {
-    width: 100%;
-    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+  
+  .van-popup__content {
+    width: 50vw !important;
+    height: 50vh !important;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  
 
   .p-pop {
     height: 100%;
