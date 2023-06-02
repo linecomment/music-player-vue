@@ -1,28 +1,20 @@
 ﻿<template>
   <div class="sc-container" @click="goToMusic">
-    <van-row>
-      <!-- 歌曲图片
-      <van-col span="4" class="song-image">
-        <img src="../assets/title_logo.jpg" alt="" />
-      </van-col> -->
-
-      <!-- 歌曲名 -->
-      <van-col class="song-name">
-        <div>忘情水</div>
-      </van-col>
-      <van-col class="song-author" style="align-items:center;">
-        刘德华.忘情水
-      </van-col>
-      <!-- 歌曲播放按钮 -->
-      <van-col offset="10">
+    <div class="sc-song-info">
+      <div class="sc-image">
+        <van-image width="2.5rem" height="2.5rem" :src="song.coverUrl" />
+      </div>
+      <div class="sc-song-detail">
+        <div class="sc-song-name">{{ song.title }}</div>
+        <div class="sc-author-name">{{ song.artist }}</div>
+      </div>
+      <div class="sc-buttons">
         <div
+          class="sc-player"
           @click="playMusic"
           :class="playIcon"
           style="font-size: 2.2rem"
         ></div>
-      </van-col>
-      <!-- 歌曲喜欢状态 -->
-      <van-col offset="1" class="like">
         <div
           @click.stop="toggleLike"
           :style="{
@@ -30,22 +22,32 @@
             color: likeStyleColor,
             fontWeight: '500',
           }"
-          class="iconfont icon-xihuan"
-        ></div
-      ></van-col>
-    </van-row>
+          class="iconfont icon-xihuan like-btn"
+        ></div>
+      </div>
+    </div>
+
     <van-divider></van-divider>
     <audio
       ref="audio"
       controls="controls"
-      :src="url"
+      :src="song.songUrl"
       :style="{ display: 'none' }"
     ></audio>
   </div>
 </template>
   <script setup>
-import { ref } from "vue";
+import { ref, defineProps, onMounted } from "vue";
 import { useRouter } from "vue-router";
+const props = defineProps({
+  song: {
+    Type: Object,
+    require: true,
+  },
+});
+onMounted(() => {
+  console.log(props.song, "props song");
+});
 const audio = ref(null);
 const router = useRouter();
 const playIcon = ref("iconfont icon-24gl-playCircle");
@@ -79,37 +81,49 @@ const goToMusic = () => {
   
   <style lang="less" scope>
 .sc-container {
-  
   height: 100%;
-
-
-
-  .song-image {
-    width: 2.6rem;
-    height: 2.6rem;
-  }
-  img {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 75% 75%;
-  }
-
-  .song-name {
-    height: 100%;
-    font-size: 1.2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .song-author {
-    height: 100%;
-    text-align: center;
-    color: red;
-  }
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
   .van-divider {
-    align-items: end;
-    text-align: end;
     margin-top: 0rem;
+  }
+
+  .sc-song-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    .sc-song-detail {
+      display: flex;
+      .sc-song-name {
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .sc-author-name {
+        font-size: 1rem;
+        color: #999999;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+    }
+  }
+
+  .sc-buttons {
+    display: flex;
+    .like-btn {
+      font-size: 1.8rem;
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+    }
+
+    .like-btn:hover {
+      transform: scale(1.2);
+    }
   }
 }
 </style>

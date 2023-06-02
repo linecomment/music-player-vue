@@ -29,3 +29,10 @@ export function sendEmailCode(email){
         method:'post',
     })
 }
+
+export function getFavorite(id){
+    return api({
+        url:'/user/like/' + id,
+        method:'get',
+    })
+}

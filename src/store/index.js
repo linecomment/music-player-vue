@@ -1,7 +1,7 @@
 ﻿import { createStore } from 'vuex'
 import { login, register } from '@/api/user';
 import { setToken, getToken, removeToken } from '@/api/token';
-import {getSongList} from '@/api/song'
+import {getSongList,getGenreList} from '@/api/song'
 
 const store = createStore({
     state: {
@@ -9,7 +9,8 @@ const store = createStore({
         userInfo:{},
         audio: new Audio(),
         songList: [
-        ]
+        ],
+        genreList:[],
 
     },
     mutations: {
@@ -27,6 +28,9 @@ const store = createStore({
         },
         SET_FAVORITE_LIST(state, favoriteList) {
             state.favoriteList = favoriteList
+        },
+        SET_GENRE_LIST(state,genreList){
+            state.genreList = genreList
         }
     },
     actions: {
@@ -60,6 +64,11 @@ const store = createStore({
                 }
             }).catch(error => {
                 console.log('获取歌曲列表失败')
+            })
+        },
+        async getGenreList({commit}){
+            getGenreList().then(res=>{
+                commit('SET_GENRE_LIST',res.data)
             })
         },
         setAudio({ commit }, audio) {

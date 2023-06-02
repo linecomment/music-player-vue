@@ -1,8 +1,8 @@
 ﻿<template>
   <div class="image-grid" >
-    <van-image  src="/music/cover/ldh_忘情水.jpg" width="100%" height="100%" @click="goToGenre"></van-image>
-    <div>ss</div>
+    <van-image  :src=genreUrl width="100%" height="100%" @click="goToGenre"></van-image>
   </div>
+
 </template>
 
 <script setup>
@@ -18,6 +18,10 @@ const props = defineProps({
     Type:String,
     require:true
   },
+  genreUrl:{
+    Type:String,
+    require:true
+  }
 })
 
 const router = useRouter()
@@ -34,6 +38,5 @@ const goToGenre = ()=>{
 .image-grid{
   width: 50%;
   height: 50%;
-
 }
 </style>
