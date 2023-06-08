@@ -1,21 +1,18 @@
 ﻿<template>
   <div class="line-profile">
+    <div class="avatar">
+      <van-image width="2.5rem" height="2.5rem" :src=avatarUrl></van-image>
+      <van-uploader
+        v-model="fileList"
+        :after-read="afterRead"
+        :max-size="500 * 1024"
+      >
+        <van-button class="upload-btn" icon="plus"></van-button>
+      </van-uploader>
+    </div>
+    <van-divider></van-divider>
     <van-form>
       <van-cell-group inset>
-        <van-field
-          v-model="formData.avatar"
-          name="avatar"
-          label="头像"
-          placeholder="未上传"
-          readonly
-        >
-          <template #button>
-            <van-icon
-              @click="edit(0)"
-              name="add-o"
-              size="larger"
-            ></van-icon> </template
-        ></van-field>
         <van-field
           v-model="formData.nickname"
           name="nickname"
@@ -40,9 +37,25 @@
           readonly
         >
           <template #button>
-            <van-icon @click="edit(2)" name="edit" size="larger"></van-icon>
+            <van-icon @click="edit" name="edit" size="larger"></van-icon>
           </template>
         </van-field>
+
+        <van-field
+          v-model="formData.gender"
+          name="birthday"
+          label="性别"
+          placeholder="未设置"
+          readonly
+        >
+          <template #button>
+            <van-icon
+              @click="edit"
+              name="edit"
+              size="larger"
+            ></van-icon> </template
+        ></van-field>
+
         <van-field
           v-model="formData.birthday"
           name="birthday"
@@ -53,7 +66,7 @@
         >
           <template #button>
             <van-icon
-              @click="edit(3)"
+              @click="edit"
               name="edit"
               size="larger"
             ></van-icon> </template
@@ -68,7 +81,7 @@
         >
           <template #button>
             <van-icon
-              @click="edit(4)"
+              @click="edit"
               name="edit"
               size="larger"
             ></van-icon> </template
@@ -84,7 +97,7 @@
         >
           <template #button>
             <van-icon
-              @click="edit(5)"
+              @click="edit"
               name="edit"
               size="larger"
             ></van-icon> </template
@@ -107,84 +120,161 @@
     close-icon="clear"
     close-icon-position="top-right"
   >
-    <div class="p-pop" v-if="activeIndex === 0">
-      <!-- 头像 -->
-      <van-field name="uploader" label="上传头像">
-        <template #input>
-          <van-uploader />
-        </template>
-      </van-field>
-    </div>
-    <div class="p-pop" v-else-if="activeIndex === 1">
-      <!-- 昵称 -->
-      <van-field v-model="nickname" placeholder="请输入新用户名" />
-    </div>
-    <div class="p-pop" v-else-if="activeIndex === 2">
-      <!-- 密码 -->
-      <van-field v-model="password" placeholder="请输入新密码" />
-    </div>
-    <div class="p-pop" v-else-if="activeIndex === 3">
-      <!-- 生日 -->
-      <van-field
-        v-model="birthday"
-        is-link
-        readonly
-        name="datePicker"
-        label="时间选择"
-        placeholder="点击选择日期"
-        @click="showPicker = true"
-      />
-      <van-popup v-model:show="showPicker" position="bottom">
-        <van-date-picker @confirm="onConfirm" @cancel="showPicker = false" />
-      </van-popup>
-    </div>
-    <div class="p-pop" v-else-if="activeIndex === 4">
-      <!-- 手机号 -->
-      <van-field v-model="phone" placeholder="请输入新电话" />
-    </div>
+    <van-form @submit="onSubmit">
+      <van-cell-group inset>
+        <van-field
+          v-model="submitData.nickname"
+          name="nickname"
+          label="用户名"
+          :placeholder="formData.nickname"
+        />
+        <van-field
+          v-model="submitData.password"
+          name="password"
+          label="密码"
+          placeholder="请设置新密码"
+        />
+        <van-field
+          v-model="submitData.gender"
+          name="gender"
+          label="性别"
+          :placeholder="formData.gender"
+        ></van-field>
 
-    <div class="p-pop" v-else-if="activeIndex === 5">
-      <!-- 邮箱 -->
-      <van-field v-model="email" placeholder="请输入新邮箱" />
-    </div>
+        <van-field
+          v-model="submitData.birthday"
+          is-link
+          readonly
+          name="birthday"
+          label="生日"
+          :placeholder="formData.birthday"
+          @click="showPicker = true"
+        />
+        <van-popup v-model:show="showPicker" position="bottom">
+          <van-date-picker @confirm="onConfirm" @cancel="showPicker = false" />
+        </van-popup>
+        <van-field
+          v-model="submitData.phone"
+          name="phone"
+          label="手机号"
+          :placeholder="formData.phone"
+        />
+        <van-field
+          v-model="submitData.email"
+          name="email"
+          label="邮箱"
+          :placeholder="formData.email"
+        />
+      </van-cell-group>
+      <div style="margin: 16px">
+        <van-button round block type="primary" native-type="submit">
+          修改
+        </van-button>
+      </div>
+    </van-form>
   </van-popup>
+  <!-- <van-popup v-model:show="showGenderPicker" position="bottom">
+    <van-picker
+      :columns="genderOptions"
+      v-model="submitData.gender"
+      @confirm="showGenderPicker = false"
+      @cancel="showGenderPicker = false"
+    />
+  </van-popup> -->
+  <!-- <van-popup v-model="showGenderPicker" position="bottom">
+    <van-picker
+      v-model="submitData.gender"
+      title="标题"
+      :columns="columns"
+      @confirm="confirmGender"
+      @cancel="showGenderPicker = false"
+    />
+  </van-popup> -->
 </template>
 
 <script setup>
-import FormPop from "@/components/FormPop.vue";
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted, computed } from "vue";
+import { useStore } from "vuex";
+import { upload, getUserInfo,updateUserInfo } from "@/api/user";
 const showPop = ref(false);
-const activeIndex = ref(0);
 const showPicker = ref(false);
+const showGenderPicker = ref(false);
+const store = useStore();
+const userInfo = computed(() => {
+  return store.state.userInfo;
+});
+let user = {}
+onMounted(() => {
+  // 获取用户信息
+  getUserInfo(userInfo.value.userId)
+    .then((res) => {
+      store.commit("SET_USER_INFO", res.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
+});
+const avatarUrl = computed(()=>{
+  return store.state.userInfo.avatarUrl
+})
 const formData = reactive({
-  avatar: "",
-  nickname: "linecomment",
-  userId: "121321 ",
-  password: "1323456",
-  birthday: "2003-09-21",
-  phone: "17709891231",
-  email: "3212012901@qq.com",
+  nickname: userInfo.value.nickname,
+  password: userInfo.value.password,
+  gender: userInfo.value.gender,
+  birthday: userInfo.value.birthday,
+  phone: userInfo.value.phone,
+  email: userInfo.value.email,
+});
+const submitData = reactive({
+  userId:userInfo.value.userId,
+  nickname: "",
+  password: "",
+  gender: "",
+  birthday:"" ,
+  phone: "",
+  email: "",
 });
 
-const avatar = ref("");
-const nickname = ref("");
-const password = ref("");
-const birthday = ref("");
-const phone = ref("");
-const email = ref("");
+
 const onConfirm = ({ selectedValues }) => {
-  result.value = selectedValues.join("/");
+  submitData.birthday = selectedValues.join("-");
   showPicker.value = false;
+  console.log(submitData);
+  
+};
+
+const onSubmit = (values) => {
+  updateUserInfo(submitData).then(res=>{
+    console.log(res)
+    showPop.value = false
+  }).catch(error=>{
+    console.log(error,'更新失败')
+  })
+  console.log("submit", values);
 };
 
 const logout = () => {
   // 登出
   console.log("logout");
 };
-const edit = (i) => {
+const edit = () => {
   showPop.value = true;
-  activeIndex.value = i;
+};
+const fileList = ref([]);
+
+const afterRead = (file) => {
+  file.status = "uploading";
+  file.message = "上传中...";
+  upload(file, 1662998854292762624n)
+    .then((res) => {
+      file.status = "finished";
+      file.message = "上传成功";
+    })
+    .catch((error) => {
+      file.status = "failed";
+      file.message = "上传失败";
+    });
 };
 </script>
 
@@ -192,25 +282,21 @@ const edit = (i) => {
 .line-profile {
   height: 100%;
   width: 100%;
-
-  
-
-  .van-popup {
+  .avatar{
+    margin-top: 0.5rem;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
+    padding-left: 2rem;
+    padding-right: 1rem;
+    .upload-btn{
+      width: 3rem;
+      height: 2rem;
+      font-size: smaller;
+      background-color: rgb(245, 114, 114);
+      color: #fff;
+    }
   }
-  
-  .van-popup__content {
-    width: 50vw !important;
-    height: 50vh !important;
-    max-width: 100%;
-    max-height: 100%;
-  }
-  
-
-  .p-pop {
-    height: 100%;
-  }
+ 
 }
 </style>

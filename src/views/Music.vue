@@ -81,7 +81,7 @@
 </template>
   
 <script setup>
-import { ref, reactive, onUnmounted,computed,watch } from "vue";
+import { ref, reactive, onMounted,onUnmounted,computed,watch } from "vue";
 import { useRoute } from "vue-router";
 import {useStore} from 'vuex'
 import Header from "@/views/header/Header.vue";
@@ -90,7 +90,6 @@ const playIcon = ref("iconfont icon-24gl-playCircle");
 const currentIndex = ref(0);
 const likeStyleColor = ref("black");
 const store = useStore()
-// 歌曲列表
 const songList = [
   {
     musicId: "122",
@@ -107,6 +106,13 @@ const songList = [
     audioUrl: "/music/李翔宇-起风了.mp3",
   },
 ];
+onMounted(()=>{
+})
+const getSongList = ()=>{
+  
+}
+// 歌曲列表
+
 const audioRef = computed(()=>{
   return store.state.audio
 })

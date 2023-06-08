@@ -35,3 +35,15 @@ export function getRankSongList(rankType) {
         method: 'get'
     })
 }
+
+// 收藏/取消收藏
+export function modifySongLike(userId,songId){
+    return api({
+        url:'/song/favorite',
+        method:'post',
+        data:{
+            userId:userId,
+            songId:songId
+        }
+    })
+}

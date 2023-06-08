@@ -12,7 +12,7 @@
       </van-col>
       <van-col>
         <div class="content" span="12">
-          <div class="title">忘情水</div>
+          <div class="title">x</div>
           <div class="tips">左/右滑动可以切换上/下首歌</div>
         </div>
       </van-col>

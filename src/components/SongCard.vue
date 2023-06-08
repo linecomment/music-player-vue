@@ -8,36 +8,13 @@
         <div class="sc-song-name">{{ song.title }}</div>
         <div class="sc-author-name">{{ song.artist }}</div>
       </div>
-      <div class="sc-buttons">
-        <div
-          class="sc-player"
-          @click="playMusic"
-          :class="playIcon"
-          style="font-size: 2.2rem"
-        ></div>
-        <div
-          @click.stop="toggleLike"
-          :style="{
-            fontSize: '2rem',
-            color: likeStyleColor,
-            fontWeight: '500',
-          }"
-          class="iconfont icon-xihuan like-btn"
-        ></div>
-      </div>
     </div>
-
     <van-divider></van-divider>
-    <audio
-      ref="audio"
-      controls="controls"
-      :src="song.songUrl"
-      :style="{ display: 'none' }"
-    ></audio>
   </div>
 </template>
   <script setup>
-import { ref, defineProps, onMounted } from "vue";
+import { ref, defineProps, onMounted, computed } from "vue";
+import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 const props = defineProps({
   song: {
@@ -45,34 +22,15 @@ const props = defineProps({
     require: true,
   },
 });
-onMounted(() => {
-  console.log(props.song, "props song");
+const store = useStore();
+const userId = computed(() => {
+  return store.state.userInfo.userId;
 });
-const audio = ref(null);
+onMounted(() => {
+  console.log(props.song)
+});
 const router = useRouter();
-const playIcon = ref("iconfont icon-24gl-playCircle");
-const url = "/music/李翔宇-起风了.mp3";
-const playMusic = () => {
-  if (audio.value.paused) {
-    playIcon.value = "iconfont icon-24gl-pauseCircle";
-    audio.value.play();
-  } else {
-    playIcon.value = "iconfont icon-24gl-playCircle";
-    audio.value.pause();
-  }
-  console.log("playMusic");
-};
-const songList = () => {};
-const likeStyleColor = ref("black");
-const toggleLike = () => {
-  if (likeStyleColor.value === "black") {
-    likeStyleColor.value = "red";
-    //todo 添加收藏/喜欢
-  } else {
-    likeStyleColor.value = "black";
-    //todo 移除收藏/喜欢
-  }
-};
+
 const id = 1;
 const goToMusic = () => {
   router.push(`/music/${id}`);
@@ -83,8 +41,8 @@ const goToMusic = () => {
 .sc-container {
   height: 100%;
   display: flex;
-  justify-content: space-around;
-  flex-direction: column;
+  justify-content: space-between;
+  background-color: rgb(227, 222, 222);
   .van-divider {
     margin-top: 0rem;
   }
@@ -96,34 +54,24 @@ const goToMusic = () => {
     width: 100%;
     .sc-song-detail {
       display: flex;
+      align-items: end;
+      width: 10rem;
+      padding-left: 8rem;
       .sc-song-name {
         font-size: 1.2rem;
-        font-weight: bold;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
+        font-family: STXingkai;
       }
       .sc-author-name {
-        font-size: 1rem;
+        padding-left: 0.2rem;
+        font-size: 0.5rem;
+        font-family: YouYuan;
         color: #999999;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
       }
     }
   }
 
   .sc-buttons {
     display: flex;
-    .like-btn {
-      font-size: 1.8rem;
-      transition: all 0.3s ease-in-out;
-      cursor: pointer;
-    }
-
-    .like-btn:hover {
-      transform: scale(1.2);
-    }
   }
 }
 </style>

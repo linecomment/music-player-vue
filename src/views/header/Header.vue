@@ -39,13 +39,14 @@ const onClickRight = () => {
 
 <style lang="less" scoped>
 .line-header{
-  background-color: red;
-  van-nav-bar{
-  background-color: red;
-  }
   img{
     width: 2rem;
     height: 2rem;
   }
+  .van-nav-bar {
+    background-color: rgb(245, 114, 114); 
+    --van-nav-bar-title-text-color:#fff;
+  }
+  
 }
 </style>

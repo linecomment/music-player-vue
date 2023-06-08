@@ -14,25 +14,60 @@ export function login(account, password) {
 export function register(account, verfyCode, password) {
     return api({
         url: '/user/register',
-        method:'post',
+        method: 'post',
         data: {
             account: account,
-            verfyCode:verfyCode,
+            verfyCode: verfyCode,
             password: password
         }
     })
 }
 
-export function sendEmailCode(email){
+export function sendEmailCode(email) {
     return api({
-        url:`/mail/sendEmail?email=${email}`,
-        method:'post',
+        url: `/mail/sendEmail?email=${email}`,
+        method: 'post',
     })
 }
 
-export function getFavorite(id){
+export function getFavorite(id) {
     return api({
-        url:'/user/like/' + id,
-        method:'get',
+        url: '/user/like/' + id,
+        method: 'get',
     })
 }
+
+// 头像上传
+export function upload(file, userId) {
+    console.log(file.file,'file')
+    return api({
+        url: '/user/upload',
+        method: 'post',
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+        data: {
+            file:file.file,
+            userId:userId
+        }
+    })
+}
+
+// 获取用户信息
+export function getUserInfo(userId){
+    return api({
+        url:'/user/'+ userId,
+        method:'get'
+    })
+}
+
+// 修改用户信息
+export function updateUserInfo(data){
+    return api({
+        url:'/user/update',
+        method:'post',
+        data:data
+    })
+}
+
+

@@ -36,7 +36,6 @@ const store = createStore({
     actions: {
         async login({ commit }, loginParam) {
             await login(loginParam.account, loginParam.password).then((res) => {
-                console.log(res.data)
                 // 登入成功
                 if (res.code === 20000) {
                     commit('SET_TOKEN', res.data.token)

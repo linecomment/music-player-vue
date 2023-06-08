@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="sl-title">
-    <span>我的歌单</span>
+    <span >我的歌单</span>
   </div>
   <div class="sl-song-list" v-for="(item,i) in songList">
     <song-card :song="item"></song-card>
@@ -17,7 +17,6 @@ const songList = reactive([]);
 onMounted(() => {
   const userId = store.state.userInfo.userId;
   getFavorite(userId).then((res) => {
-    console.log(songList,'songlist')
       Object.assign(songList, res.data);
     })
     .catch((error) => {
@@ -26,5 +25,19 @@ onMounted(() => {
 });
 </script>
   
-  <style>
+  <style lang="less" scoped>
+  .sl-title{
+    background-color: rgb(245, 114, 114);
+    height: 4rem;
+    width: 100%;
+    span{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color:#fff;
+      height:100%;
+      font-size: x-large;
+      font-family: STXingkai;
+    }
+  }
 </style>

@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="image-grid" >
-    <van-image  :src=genreUrl width="100%" height="100%" @click="goToGenre"></van-image>
+    <van-image  class="v-image" :src=genreUrl width="100%" height="100%" @click="goToGenre"></van-image>
   </div>
 
 </template>
@@ -36,7 +36,10 @@ const goToGenre = ()=>{
 
 <style lang="less" scoped>
 .image-grid{
-  width: 50%;
-  height: 50%;
+  width: 48%;
+  height: 48%;
+  .v-image{
+    border-radius: 50%;
+  }
 }
 </style>

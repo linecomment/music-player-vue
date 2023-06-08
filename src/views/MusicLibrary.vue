@@ -1,7 +1,7 @@
 ﻿<template>
   <Swpie></Swpie>
   <div class="parent">
-  <div class="title">为你推荐</div>
+  <div class="ml-title">为你推荐</div>
 
     <template v-for="(item, i) in genreList">
       <template v-if="i % 2 === 0">
@@ -44,11 +44,13 @@ const genreList = store.state.genreList
 </script>
 
 <style lang="less" scoped>
-.title {
+.ml-title {
+  display: flex;
+  align-items: center;
   height: 3rem;
   font-size: 1.6rem;
-  font-family: cursive;
-  font-weight: bold;
+  padding-left: 0.5rem;
+  font-family: STXingkai;
 }
 
 .parent {
@@ -60,13 +62,11 @@ const genreList = store.state.genreList
   width: 100%;
   height: 20%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-bottom: 1rem;
-  padding: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
-.song-genre {
-  width: calc(50% - 8px);
-  
-}
+
 </style>
