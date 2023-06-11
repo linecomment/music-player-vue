@@ -10,19 +10,29 @@ const api = axios.create({
     timeout: 5 * 1000
 })
 
+const excludeUrls = ['/user/login', '/user/register', '/mail/sendEmail']
+
 api.interceptors.request.use((config) => {
-    let token;
-    if(store.state.token){
-        token = getToken()
+    if (config.url !== '/user/login' && config.url !== '/user/register' && config.url !== '/mail/sendEmail') {
+        const token = getToken()
+        if (token) {
+            config.headers['Authorization'] = `${token}`
+        }
     }
-    // if (token && config.url !== '/user/login' && config.url !== '/user/register' && config.url!=='/mail/sendEmail') {
-    //     config.headers['Authorization'] = `Bearer ${token}`
-    // }
+    // if (excludeUrls.indexOf(config.url) === -1) {
+    //     const token = getToken()
+    //     if (token) {
+    //         config.headers['Authorization'] = `Bearer ${token}`
+    //     }
+    // } 
     return config
 })
 
 api.interceptors.response.use((res) => {
     console.log('interceptors res : ',res)
+    if(res.data.code === 40013 ){
+        window.location.href = '/login'
+    }
     return res.data
 }, (error) => {
     return Promise.reject(error)

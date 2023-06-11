@@ -1,6 +1,5 @@
 ﻿<template>
   <Header></Header>
-  <p>{{ route.params.id }}</p>
   <div class="container">
     <div class="music-info">
       <van-image
@@ -14,7 +13,7 @@
       <van-row justify="space-between">
         <van-col offset="2">
           <div class="song-name">
-            {{ songList[currentIndex].musicName }}
+            {{ songList[currentIndex].title }}
           </div></van-col
         >
         <!-- 喜欢图标 -->
@@ -81,44 +80,70 @@
 </template>
   
 <script setup>
-import { ref, reactive, onMounted,onUnmounted,computed,watch } from "vue";
+import { ref, reactive, onMounted, onUnmounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
-import {useStore} from 'vuex'
+import { useStore } from "vuex";
+import { getSongList,modifySongLike } from "@/api/song";
 import Header from "@/views/header/Header.vue";
-const route = useRoute();
 const playIcon = ref("iconfont icon-24gl-playCircle");
-const currentIndex = ref(0);
 const likeStyleColor = ref("black");
-const store = useStore()
-const songList = [
-  {
-    musicId: "122",
-    musicName: "忘情水",
-    coverUrl: "/music/cover/ldh_忘情水.jpg",
-    author: "刘德华",
-    audioUrl: "/music/李翔宇-起风了.mp3",
-  },
-  {
-    musicId: "122",
-    musicName: "忘情水",
-    coverUrl: "/music/cover/ldh_忘情水.jpg",
-    author: "刘德华2",
-    audioUrl: "/music/李翔宇-起风了.mp3",
-  },
-];
-onMounted(()=>{
-})
-const getSongList = ()=>{
-  
-}
-// 歌曲列表
+const store = useStore();
+const route = useRoute()
+const currentIndex = ref(0);
 
-const audioRef = computed(()=>{
-  return store.state.audio
-})
-const audio = audioRef.value
-// let audio = new Audio();
-audio.src = songList[0].audioUrl;
+const songList = reactive([
+  {
+    // id: "1",
+    // artist: "音阙诗听",
+    // songGenre: 1,
+    // albumId: "1",
+    // coverUrl: "http://localhost:8888/music/img/1.png",
+    // duration: "00:02:53",
+    // title: "红昭愿",
+    // lyrics: "http://localhost:8888/music/lyrics/1.lrc",
+    // releaseTime: "2023-05-31T05:11:09.000+00:00",
+    // playTimes: "0",
+    // songUrl: "http://localhost:8888/music/songs/红昭愿.mp3",
+    // uploader: null,
+    // like: 1,
+  },
+]);
+const pageParam = {
+  currentIndex: 0,
+  limit: 20,
+  userId: store.state.userInfo.userId,
+};
+const audioRef = computed(() => {
+  return store.state.audio;
+});
+
+// const curSong = computed(() => {
+//   return songList.find(item => item.id === route.params.id)
+// })
+const curSong = reactive({})
+const audio = audioRef.value;
+onMounted(() => {
+  getSongListById();
+});
+const getSongListById = () => {
+  getSongList(pageParam)
+    .then((res) => {
+      Object.assign(songList, res.data);
+      const id = parseInt(route.params.id)
+      curSong.value = songList.find(item => item.id === route.params.id)
+      audio.src = songList[0].songUrl;
+    })
+    .catch((error) => {
+      console.log(error, "error");
+    });
+};
+watch(
+  () => currentIndex,
+  (val) => {
+    audio.src = songList[newVal].songUrl;
+    store.dispatch("setAudio", audio);
+  }
+);
 
 const state = reactive({
   progress: 0,
@@ -138,11 +163,14 @@ audio.addEventListener("timeupdate", () => {
 const toggleLike = () => {
   if (likeStyleColor.value === "black") {
     likeStyleColor.value = "red";
-    //todo 添加收藏/喜欢
   } else {
     likeStyleColor.value = "black";
-    //todo 移除收藏/喜欢
   }
+  modifySongLike(store.state.userInfo.userId,songList[currentIndex.value].id).then(res=>{
+  }).catch(error=>{
+    console.log('更新喜欢状态失败',error)
+  })
+
 };
 const togglePlay = () => {
   if (audio.paused) {
@@ -159,7 +187,7 @@ const previousSong = () => {
   if (currentIndex.value < 0) {
     currentIndex.value = songList.length - 1;
   }
-  audio.src = songList[currentIndex.value].audioUrl;
+  audio.src = songList[currentIndex.value].songUrl;
   state.progress = 0;
   playIcon.value = "iconfont icon-24gl-pauseCircle";
   audio.play();
@@ -169,7 +197,7 @@ const nextSong = () => {
   if (currentIndex.value >= songList.length) {
     currentIndex.value = 0;
   }
-  audio.src = songList[currentIndex.value].audioUrl;
+  audio.src = songList[currentIndex.value].songUrl;
   state.progress = 0;
   playIcon.value = "iconfont icon-24gl-pauseCircle";
   audio.play();
@@ -189,7 +217,7 @@ const seekTo = () => {
 
 let timer = setInterval(() => {
   state.currentTime = formatTime(audio.currentTime);
-  store.dispatch('setAudio',audio)
+  store.dispatch("setAudio", audio);
 }, 1000);
 
 onUnmounted(() => {

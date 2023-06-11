@@ -5,14 +5,15 @@
     @touchmove="touchMove"
     @touchend="touchEnd"
     @click="goToMusic"
+    v-if="songList.length > 0"
   >
     <van-row>
       <van-col span="4">
-        <img src="../assets/title_logo.jpg" alt="" />
+        <img :src="songList[currentIndex].coverUrl" alt="../assets/title_logo.jpg" />
       </van-col>
       <van-col>
         <div class="content" span="12">
-          <div class="title">x</div>
+          <div class="title">{{ songList[currentIndex].title }}</div>
           <div class="tips">左/右滑动可以切换上/下首歌</div>
         </div>
       </van-col>
@@ -21,45 +22,70 @@
         <div
           @click.stop="playMusic"
           :class="playIcon"
-          style="font-size: 2.2rem;color:rgb(224, 96, 96)"
+          style="font-size: 2.2rem; color: rgb(224, 96, 96)"
         ></div>
       </van-col>
       <!-- 歌单图标 -->
       <van-col span="3">
         <div
-          @click="songList"
+          @click.stop="goToSongList"
           class="iconfont icon-24gl-playlistMusic4"
-          style="font-size: 2.2rem;color:rgb(224, 96, 96)"
+          style="font-size: 2.2rem; color: rgb(224, 96, 96)"
         ></div>
       </van-col>
     </van-row>
-    <audio
-      ref="audio"
-      controls="controls"
-      :src="url"
-      :style="{ display: 'none' }"
-    ></audio>
- 
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
-import { useRouter } from 'vue-router';
-const audio = ref(null);
-const router = useRouter()
+import { ref, onMounted, reactive, computed } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import { getSongList } from "@/api/song";
+// const audio = ref(null);
+const router = useRouter();
+const store = useStore();
+const currentIndex = ref(0);
 const playIcon = ref("iconfont icon-24gl-playCircle");
-const url = "/music/李翔宇-起风了.mp3";
+const audioRef = computed(() => {
+  return store.state.audio;
+});
+const audio = audioRef.value;
+const songList = reactive([])
+const pageParam = {
+  currentIndex: 0,
+  limit: 20,
+  userId: store.state.userInfo.userId,
+};
+onMounted(() => {
+  getSongListById()
+  console.log(songList,'songList')
+});
+
+const getSongListById = () => {
+  getSongList(pageParam)
+    .then((res) => {
+      console.log(res, "res");
+      Object.assign(songList, res.data);
+      audio.src = songList[0].songUrl;
+    })
+    .catch((error) => {
+      console.log(error, "error");
+    });
+};
+
 const playMusic = () => {
-  if (audio.value.paused) {
+  if (audio.paused) {
     playIcon.value = "iconfont icon-24gl-pauseCircle";
-    audio.value.play();
+    audio.play();
   } else {
     playIcon.value = "iconfont icon-24gl-playCircle";
-    audio.value.pause();
+    audio.pause();
   }
 };
-const songList = () => {};
-
+const goToSongList = ()=>{
+  // 跳转歌单
+  // console.log(songList)
+}
 let startX = null; // 记录起始触摸点
 const touchStart = (e) => {
   startX = e.touches[0].pageX;
@@ -71,8 +97,23 @@ const touchMove = (e) => {
     // 切换歌曲操作
     if (moveX > 0) {
       console.log("上一首");
+      currentIndex.value--;
+      if (currentIndex.value < 0) {
+        currentIndex.value = songList.length - 1;
+      }
+      audio.src = songList[currentIndex.value].songUrl;
+
+      playIcon.value = "iconfont icon-24gl-pauseCircle";
+      audio.play();
     } else {
       console.log("下一首");
+      currentIndex.value++;
+      if (currentIndex.value >= songList.length) {
+        currentIndex.value = 0;
+      }
+      audio.src = songList[currentIndex.value].songUrl;
+      playIcon.value = "iconfont icon-24gl-pauseCircle";
+      audio.play();
     }
     startX = null; // 清空起始触摸点
   }
@@ -80,14 +121,18 @@ const touchMove = (e) => {
 const touchEnd = () => {
   startX = null; // 清空起始触摸点
 };
-const id = 1
-const goToMusic = ()=>{
-  router.push(`/music/${id}`)
-}
+// const id = 1;
+const goToMusic = () => {
+  if(songList.length === 0){
+    return 
+  }
+  router.push('/music/'+ songList[currentIndex].id);
+
+};
 </script>
 
-<style lang="less" scope>
-.mp-music-player{
+<style lang="less" scoped>
+.mp-music-player {
   background-color: rgb(48, 47, 47);
   img {
     height: 2.6rem;
@@ -96,7 +141,7 @@ const goToMusic = ()=>{
   }
   .content {
     .title {
-      color:rgb(224, 96, 96);
+      color: rgb(224, 96, 96);
       font-size: 1.2rem;
       margin-top: 0;
     }

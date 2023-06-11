@@ -23,6 +23,16 @@ export function register(account, verfyCode, password) {
     })
 }
 
+export function logout(userId){
+    return api({
+        url:'/user/logout',
+        method:'post',
+        data:{
+            userId:userId
+        }
+    })
+}
+
 export function sendEmailCode(email) {
     return api({
         url: `/mail/sendEmail?email=${email}`,

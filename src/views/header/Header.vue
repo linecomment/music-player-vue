@@ -27,8 +27,6 @@ const avatar = computed(()=>{
   return store.state.userInfo.avatarUrl
 })
 onMounted(()=>{
-  console.log(store.state.userInfo.avatarUrl)
-
 })
 const router = useRouter()
 const onClickLeft = () => history.back();

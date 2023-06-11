@@ -15,7 +15,7 @@
   <script setup>
 import { ref, defineProps, onMounted, computed } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 const props = defineProps({
   song: {
     Type: Object,
@@ -26,14 +26,15 @@ const store = useStore();
 const userId = computed(() => {
   return store.state.userInfo.userId;
 });
+const route = useRoute()
 onMounted(() => {
   console.log(props.song)
 });
 const router = useRouter();
 
-const id = 1;
 const goToMusic = () => {
-  router.push(`/music/${id}`);
+  console.log(props.song.id)
+  router.push(`/music/${props.song.id}`);
 };
 </script>
   

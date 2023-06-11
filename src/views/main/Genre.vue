@@ -63,7 +63,7 @@ const genre = computed(()=>{
     }
   }
   .genre-song-list {
-    margin-top: 2rem;
+    margin-top: 0rem;
   }
 }
 </style>

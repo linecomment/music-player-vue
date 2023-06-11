@@ -1,5 +1,7 @@
 ﻿import { createRouter, createWebHistory } from 'vue-router'
-import {getToken,removeToken} from '@/api/token'
+import { getToken } from '@/api/token'
+import store from '@/store'
+
 
 
 const routes = [
@@ -7,11 +9,13 @@ const routes = [
         path: '/',
         name: 'home',
         component: () => import('@/views/home/Home.vue'),
+      
         children: [
             {
-                path:'',
+                path: '',
                 name: 'musicLibrary',
-                component: () => import('@/views/MusicLibrary.vue')
+                component: () => import('@/views/MusicLibrary.vue'),
+               
             },
             {
                 path: 'rank',
@@ -21,33 +25,36 @@ const routes = [
             {
                 path: 'song',
                 name: 'songList',
-                component: () => import('@/views/SongList.vue')
+                component: () => import('@/views/SongList.vue'),
+               
             },
             {
                 path: 'profile',
                 name: 'profile',
-                component: () => import('@/views/Profile.vue')
+                component: () => import('@/views/Profile.vue'),
+               
             },
             {
-                path:'genre/:id',
-                name:'genre',
-                component:()=>import('@/views/main/Genre.vue')
+                path: 'genre/:id',
+                name: 'genre',
+                component: () => import('@/views/main/Genre.vue'),
+               
             },
         ]
     },
     {
-        path:'/music/:id',
-        name:'music',
-        component:() => import('@/views/Music.vue')
+        path: '/music/:id',
+        name: 'music',
+        component: () => import('@/views/Music.vue'),
 
     },
     {
-        path:'/login',
-        name:'login',
-        component:()=>import('@/views/Login.vue')
+        path: '/login',
+        name: 'login',
+        component: () => import('@/views/Login.vue')
     }
 
-    
+
 ]
 
 
@@ -55,5 +62,17 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 })
-  
+
+router.beforeEach((to, from, next) => {
+    const token = store.state.token || ''
+    console.log(token)
+    if (to.path !== '/login' && !getToken() && !token) {
+        next({ path: '/login' })
+    } else {
+        
+        next()
+    }
+})
+
+
 export default router

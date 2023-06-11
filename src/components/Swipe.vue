@@ -1,7 +1,6 @@
 ﻿<template>
   <van-swipe class="my-swipe" :autoplay="3000" >
     <van-swipe-item v-for="image in imageList" :key="image">
-      <!-- <img  width="100%" height="20rem" :src="image" /> -->
       <van-image height="100%" width="100%" :src="image"></van-image>
     </van-swipe-item>
   </van-swipe>

@@ -256,7 +256,7 @@ const onSubmit = (values) => {
 
 const logout = () => {
   // 登出
-  console.log("logout");
+  store.dispatch('logout',store.state.userInfo.userId)
 };
 const edit = () => {
   showPop.value = true;
