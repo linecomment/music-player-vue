@@ -83,12 +83,13 @@
 import { ref, reactive, onMounted, onUnmounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { getSongList,modifySongLike } from "@/api/song";
+import { showToast } from "vant";
+import { getSongList, modifySongLike } from "@/api/song";
 import Header from "@/views/header/Header.vue";
 const playIcon = ref("iconfont icon-24gl-playCircle");
 const likeStyleColor = ref("black");
 const store = useStore();
-const route = useRoute()
+const route = useRoute();
 const currentIndex = ref(0);
 
 const songList = reactive([
@@ -117,10 +118,10 @@ const audioRef = computed(() => {
   return store.state.audio;
 });
 
-// const curSong = computed(() => {
-//   return songList.find(item => item.id === route.params.id)
-// })
-const curSong = reactive({})
+const likeStatus = computed(() => {
+  return songList[currentIndex.value].like || 0;
+});
+
 const audio = audioRef.value;
 onMounted(() => {
   getSongListById();
@@ -129,9 +130,10 @@ const getSongListById = () => {
   getSongList(pageParam)
     .then((res) => {
       Object.assign(songList, res.data);
-      const id = parseInt(route.params.id)
-      curSong.value = songList.find(item => item.id === route.params.id)
-      audio.src = songList[0].songUrl;
+      currentIndex.value = songList.findIndex(
+        (item) => item.id === route.params.id
+      );
+      audio.src = songList[currentIndex.value].songUrl;
     })
     .catch((error) => {
       console.log(error, "error");
@@ -163,14 +165,17 @@ audio.addEventListener("timeupdate", () => {
 const toggleLike = () => {
   if (likeStyleColor.value === "black") {
     likeStyleColor.value = "red";
+    showToast("收藏成功~");
   } else {
     likeStyleColor.value = "black";
+    showToast("取消成功~");
   }
-  modifySongLike(store.state.userInfo.userId,songList[currentIndex.value].id).then(res=>{
-  }).catch(error=>{
-    console.log('更新喜欢状态失败',error)
-  })
-
+  modifySongLike(store.state.userInfo.userId, songList[currentIndex.value].id)
+    .then((res) => {})
+    .catch((error) => {
+      showToast("更新喜欢状态失败");
+      console.log("更新喜欢状态失败", error);
+    });
 };
 const togglePlay = () => {
   if (audio.paused) {

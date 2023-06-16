@@ -65,11 +65,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const token = store.state.token || ''
-    console.log(token)
     if (to.path !== '/login' && !getToken() && !token) {
         next({ path: '/login' })
     } else {
-        
         next()
     }
 })

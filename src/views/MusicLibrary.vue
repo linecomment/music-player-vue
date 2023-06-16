@@ -68,5 +68,5 @@ const genreList = store.state.genreList
   padding-right: 0.5rem;
 }
 
-
+ 
 </style>

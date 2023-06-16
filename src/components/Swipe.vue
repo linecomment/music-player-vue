@@ -9,7 +9,7 @@
 <script setup>
 import {reactive} from 'vue'
 const imageList = reactive([
-  '/public/music/1.png','/public/music/2.png','/public/music/3.png','/public/music/4.png'
+  '/music/1.png','/music/2.png','/music/3.png','/music/4.png'
 ])
 </script>
 

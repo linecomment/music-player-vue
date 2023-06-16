@@ -29,7 +29,7 @@ api.interceptors.request.use((config) => {
 })
 
 api.interceptors.response.use((res) => {
-    console.log('interceptors res : ',res)
+    // console.log('interceptors res : ',res)
     if(res.data.code === 40013 ){
         window.location.href = '/login'
     }

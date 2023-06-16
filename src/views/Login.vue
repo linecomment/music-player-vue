@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="l-container">
-    <div class="l-title">欢迎登入</div>
+    <div class="l-title">欢迎{{ title }}</div>
     <div class="l-logo">
       <img src="../assets/title_logo.jpg" />
     </div>
@@ -98,6 +98,7 @@ import { sendEmailCode } from '@/api/user'
 const isRegister = ref(true);
 const router = useRouter();
 const store = useStore();
+const title = ref('登入')
 const formData = reactive({
   account: "2687669185@qq.com",
   password: "1234567",
@@ -167,8 +168,10 @@ const registerOrLogin = () => {
   clearForm();
   if (isRegister.value) {
     isRegister.value = false;
+    title.value = '注册'
   } else {
     isRegister.value = true;
+    title.value = '登入'
   }
 };
 // 表单提交

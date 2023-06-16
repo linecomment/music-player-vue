@@ -42,6 +42,7 @@ const store = createStore({
                     commit('SET_TOKEN', res.data.token)
                     setToken(res.data.token)
                     commit('SET_USER_INFO',res.data)
+                    // window.location.href='/'
                 }
             }).catch(error => {
                 console.log('登入失败',error)
