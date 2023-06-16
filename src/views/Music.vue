@@ -87,7 +87,7 @@ import { showToast } from "vant";
 import { getSongList, modifySongLike } from "@/api/song";
 import Header from "@/views/header/Header.vue";
 const playIcon = ref("iconfont icon-24gl-playCircle");
-const likeStyleColor = ref("black");
+// const likeStyleColor = ref("black");
 const store = useStore();
 const route = useRoute();
 const currentIndex = ref(0);
@@ -121,6 +121,9 @@ const audioRef = computed(() => {
 const likeStatus = computed(() => {
   return songList[currentIndex.value].like || 0;
 });
+const likeStyleColor = computed(() => {
+  return likeStatus.value ? "red" : "black";
+});
 
 const audio = audioRef.value;
 onMounted(() => {
@@ -134,6 +137,7 @@ const getSongListById = () => {
         (item) => item.id === route.params.id
       );
       audio.src = songList[currentIndex.value].songUrl;
+      console.log(likeStatus)
     })
     .catch((error) => {
       console.log(error, "error");
@@ -163,18 +167,15 @@ audio.addEventListener("timeupdate", () => {
 });
 
 const toggleLike = () => {
-  if (likeStyleColor.value === "black") {
-    likeStyleColor.value = "red";
+  if (likeStatus.value === 0) {
     showToast("收藏成功~");
   } else {
-    likeStyleColor.value = "black";
     showToast("取消成功~");
   }
   modifySongLike(store.state.userInfo.userId, songList[currentIndex.value].id)
     .then((res) => {})
     .catch((error) => {
       showToast("更新喜欢状态失败");
-      console.log("更新喜欢状态失败", error);
     });
 };
 const togglePlay = () => {

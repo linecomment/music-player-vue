@@ -84,6 +84,7 @@ const playMusic = () => {
 };
 const goToSongList = ()=>{
   // 跳转歌单
+  router.push('/song')
 }
 let startX = null; // 记录起始触摸点
 const touchStart = (e) => {

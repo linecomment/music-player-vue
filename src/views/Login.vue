@@ -5,7 +5,7 @@
       <img src="../assets/title_logo.jpg" />
     </div>
     <!-- 登入 -->
-    <van-form  class="l-form" v-show="isRegister">
+    <van-form class="l-form" v-show="isRegister">
       <van-cell-group inset>
         <van-field
           v-model="formData.account"
@@ -34,7 +34,7 @@
       </div>
     </van-form>
     <!-- 注册 -->
-    <van-form  class="l-form" v-show="!isRegister">
+    <van-form class="l-form" v-show="!isRegister">
       <van-cell-group inset>
         <van-field
           v-model="formData.account"
@@ -94,11 +94,12 @@
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { sendEmailCode } from '@/api/user'
+import { sendEmailCode } from "@/api/user";
+import { showToast } from "vant";
 const isRegister = ref(true);
 const router = useRouter();
 const store = useStore();
-const title = ref('登入')
+const title = ref("登入");
 const formData = reactive({
   account: "2687669185@qq.com",
   password: "1234567",
@@ -153,37 +154,38 @@ const confirmPasswordRules = [
 ];
 // 发送验证码
 const sendAuthCode = () => {
-  sendEmailCode(formData.account).then((res)=>{
-    if(res.code === 20000){
-      console.log('发送成功')
-    }else {
-      console.log('发送失败')
-    }
-  }).catch((error)=>{
-    console.log(error)
-  })
+  sendEmailCode(formData.account)
+    .then((res) => {
+      if (res.code === 20000) {
+        showToast('验证码发送成功')
+      } else {
+        showToast('验证码发送失败')
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 // 注册/登入 页面转换
 const registerOrLogin = () => {
   clearForm();
   if (isRegister.value) {
     isRegister.value = false;
-    title.value = '注册'
+    title.value = "注册";
   } else {
     isRegister.value = true;
-    title.value = '登入'
+    title.value = "登入";
   }
 };
 // 表单提交
 const submit = (values) => {
   if (isRegister.value) {
     // 登入
-    store.dispatch('login', formData);
-    router.push("/");
+    store.dispatch("login", formData);
+    // router.push("/");
   } else {
     // 注册
-    store.dispatch('register',formData)
-    console.log("注册");
+    store.dispatch("register", formData);
   }
 };
 </script>

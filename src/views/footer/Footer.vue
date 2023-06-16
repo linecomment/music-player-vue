@@ -24,10 +24,12 @@
   </div>
 </template>
 <script setup>
+import {ref} from 'vue'
 import { useRouter,useRoute } from "vue-router";
 import MusicPlayer from "@/components/MusicPlayer.vue";
 const router = useRouter();
 const route = useRoute();
+const active = ref(0)
 const toMusicLib = (i) => {
   console.log(i);
   router.push("/");

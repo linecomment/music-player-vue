@@ -2,10 +2,11 @@
 import { login, register,logout } from '@/api/user';
 import { setToken, getToken, removeToken } from '@/api/token';
 import {getSongList,getGenreList} from '@/api/song'
+import {showToast} from 'vant'
 
 const store = createStore({
     state: {
-        token: getToken(),
+        token: '',
         userInfo:{},
         audio: new Audio(),
         songList: [
@@ -43,9 +44,10 @@ const store = createStore({
                     setToken(res.data.token)
                     commit('SET_USER_INFO',res.data)
                     // window.location.href='/'
+                    showToast('登入成功')
                 }
             }).catch(error => {
-                console.log('登入失败',error)
+                showToast('登入失败')
             })
         },
         async register({ commit }, registerParam) {
@@ -54,9 +56,10 @@ const store = createStore({
                 if (res.code === 20000) {
                     commit('SET_TOKEN', res.data)
                     setToken(res.data)
+                    showToast('登入失败')
                 }
             }).catch(error => {
-                console.log('注册失败')
+                showToast('注册失败')
             })
         },
         async getSongList({commit},pageParam){
@@ -77,14 +80,14 @@ const store = createStore({
             console.log(userId)
             await logout(userId).then(res=>{
                 if(res.code === 20000){
-                    console.log('登出成功')
                     commit('SET_TOKEN','')
                     commit('SET_SONG_LIST',null)
                     commit('SET_USER_INFO',null)
                     removeToken()
+                    showToast('登出成功')
                 }
             }).catch(error=>{
-                console.log('登出失败',error)
+                showToast('登出失败')
             })
         }
         ,

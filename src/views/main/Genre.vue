@@ -13,8 +13,10 @@ import { onMounted, computed, reactive } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import SongCard from "@/components/SongCard.vue";
 import { getSongByGenre,getGenreList } from '@/api/song'
-import store from "../../store";
+import { useStore } from "vuex";
+import {showToast} from 'vant'
 const route = useRoute();
+const store = useStore()
 
 const songList = reactive([])
 onMounted(() => {
@@ -22,7 +24,7 @@ onMounted(() => {
   getSongByGenre(route.params.id).then(res=>{
     Object.assign(songList,res.data)
   }).catch(error=>{
-    console.log('获取流派歌曲失败')
+    showToast('获取流派歌曲列表失败')
   })
   // 如果 store 中没有 genreList 数据，则从接口中获取并保存到 store 中
   if (!store.state.genreList || !store.state.genreList.length) {

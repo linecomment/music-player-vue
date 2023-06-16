@@ -21,7 +21,6 @@ import { ref, reactive, defineProps, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import Swpie from "@/components/Swipe.vue";
 import SongGenre from "@/components/SongGenre.vue";
-import { getGenreList } from "@/api/song";
 const store = useStore();
 
 const pageParam = {
