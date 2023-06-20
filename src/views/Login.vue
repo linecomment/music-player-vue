@@ -187,6 +187,7 @@ const submit = (values) => {
     // 注册
     store.dispatch("register", formData);
   }
+  router.push('/')
 };
 </script>
 
